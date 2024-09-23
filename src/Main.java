@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class Main {
     public static boolean pass = true;
+    public static boolean findNextSpace = false;
     public static final Set<String> reserved = Set.of("TAGS", "BEGIN", "SEQUENCE", "INTEGER", "DATE", "END");
     public static final Map<Character, String> charTokens = Map.of(
             '\"', "QUOTATION MARK",
@@ -28,6 +29,7 @@ public class Main {
         try {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             while ((line = reader.readLine()) != null) {
+                findNextSpace = false;
                 evaluateLine(line);
             }
         } catch (IOException e) {
@@ -48,8 +50,14 @@ public class Main {
         while (i < line.length()) {
             char c = line.charAt(i);
 
+            if (findNextSpace && c != ' ') {
+                i++;
+                continue;
+            }
+
             if (c == ' ') {
                 i++;
+                findNextSpace = false;
                 continue;
             }
 
@@ -61,7 +69,7 @@ public class Main {
                 if (typeReference == null) {
                     System.out.println("Error: Invalid Type Reference on line \"" + line + "\"");
                     pass = false;
-                    break;
+                    findNextSpace = true;
                 } else if (reserved.contains(typeReference)) {
                     System.out.printf("Reserved Word: %20s%n", typeReference);
                     i += typeReference.length();
@@ -74,7 +82,7 @@ public class Main {
                 if (identifier == null) {
                     System.out.println("Error: Invalid Identifier on line \"" + line + "\"");
                     pass = false;
-                    break;
+                    findNextSpace = true;
                 } else {
                     System.out.printf("Identifier: %23s%n", identifier);
                     i += identifier.length();
@@ -84,7 +92,7 @@ public class Main {
                 if (number == null) {
                     System.out.println("Error: Invalid number on line \"" + line + "\"");
                     pass = false;
-                    break;
+                    findNextSpace = true;
                 } else {
                     System.out.printf("Number: %27s%n", number);
                     i += number.length();
@@ -93,12 +101,19 @@ public class Main {
                 System.out.printf("Range Separator: %18s%n", "..");
                 i += 2;
             } else if (charTokens.containsKey(line.charAt(i))) {
-                System.out.printf("Token: %28s%n", charTokens.get(line.charAt(i)));
-                i++;
+                if (i + 1 < line.length() && line.charAt(i+1) != ' ') {
+                    System.out.println("Error: Invalid token on line \"" + line + "\"");
+                    pass = false;
+                    findNextSpace = true;
+                    i++;
+                } else {
+                    System.out.printf("Token: %28s%n", charTokens.get(line.charAt(i)));
+                    i++;
+                }
             } else {
                 System.out.println("Error: Invalid token on line \"" + line + "\"");
                 pass = false;
-                break;
+                findNextSpace = true;
             }
         }
     }

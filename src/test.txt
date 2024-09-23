@@ -1,17 +1,18 @@
 MyShopPurchaseOrders   TAGS   ::=   BEGIN
 
 PurchaseOrder ::= SEQUENCE {
-date-Of--Order DATE,
+dateOfOrder DATE,
 customer    CustomerInfo,
 items       ListOfItems
 }
 
 
 Item ::= SEQUENCE {
-itemCode-        INTEGER ( 1 .. 99999 ) ,
-power           INTEGER ( 110 | 220 ) ,
-delivery-Time    INTEGER ( 8 .. 12 | 14 .. 19 ) ,
+-itemCode        INTEGER ( 1 .. 99999 ) ,
+power-           INTEGER ( 110 | 220 ) ,
+delivery--Time    INTEGER ( 8 .. 12 | 14 .. 19 ) ,
 quantity        INTEGER ( 1 .. 01000 ) ,
-unitPrice       INTEGER ( 0 .. 9999 ) ,
+9unitPrice       INTEGER ( 1 .. 9999 ) ,
+&
 }
 END

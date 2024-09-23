@@ -56,7 +56,7 @@ public class Main {
             if (assignmentOperator(line, i)) {
                 System.out.printf("Assignment Operator: %14s%n", "::=");
                 i += 3;
-            } else if (Character.isLetter(c) && Character.isUpperCase(c)) {
+            } else if (c >= 'A' && c <= 'Z') {
                 String typeReference = getTypeReference(line.substring(i));
                 if (typeReference == null) {
                     System.out.println("Error: Invalid Type Reference on line \"" + line + "\"");
@@ -69,7 +69,7 @@ public class Main {
                     System.out.printf("TypeReference: %20s%n", typeReference);
                     i += typeReference.length();
                 }
-            } else if (Character.isLetter(c) && Character.isLowerCase(c)) {
+            } else if (c >= 'a' && c <= 'z') {
                 String identifier = getIdentifier(line.substring(i));
                 if (identifier == null) {
                     System.out.println("Error: Invalid Identifier on line \"" + line + "\"");
@@ -79,10 +79,10 @@ public class Main {
                     System.out.printf("Identifier: %23s%n", identifier);
                     i += identifier.length();
                 }
-            } else if (Character.isDigit(c)) {
+            } else if (c >= '0' && c <= '9') {
                 String number = getNumber(line.substring(i));
                 if (number == null) {
-                    System.out.println("Error: Invalid number on line \"" + "\"");
+                    System.out.println("Error: Invalid number on line \"" + line + "\"");
                     pass = false;
                     break;
                 } else {
@@ -120,7 +120,7 @@ public class Main {
                 }
             }
 
-            if (Character.isLetter(c) || Character.isDigit(c) || c == '-') {
+            if (((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) || (c >= '0' && c <= '9') || c == '-') {
                 ans.append(c);
                 if (c == '-') {
                     lastWasHyphen = true;
@@ -148,7 +148,7 @@ public class Main {
                 }
             }
 
-            if (Character.isLetter(c) || Character.isDigit(c) || c == '-') {
+            if (((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z')) || (c >= '0' && c <= '9') || c == '-') {
                 ans.append(c);
                 if (c == '-') {
                     lastWasHyphen = true;
@@ -165,12 +165,12 @@ public class Main {
 
     public static String getNumber(String line) {
         StringBuilder ans = new StringBuilder();
-        if (line.charAt(0) == '0') {
+        if (line.charAt(0) == '0' && line.length() > 1 && (line.charAt(1) >= '0' && line.charAt(1) <= '9')) {
             return null;
         }
 
         for (char c : line.toCharArray()) {
-            if (Character.isDigit(c)) {
+            if ((c >= '0' && c <= '9')) {
                 ans.append(c);
             } else if (c == ' ' || charTokens.containsKey(c)) {
                 return ans.toString();
